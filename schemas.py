@@ -25,3 +25,74 @@ class RegisterModel(BaseModel):
 class LoginModel(BaseModel):
     username:Optional[str]
     password:Optional[str]
+
+
+
+class ProductModel(BaseModel):
+    id: Optional[int]
+    name: Optional[str]
+    price: Optional[float]
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            'id': 1,
+            'name':'example_product',
+            'price':1,
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+class ProductCreateModel(BaseModel):
+    id: Optional[int]
+    name: Optional[str]
+    price: Optional[int]
+
+
+class ProductListModel(BaseModel):
+    id: Optional[int]
+    name: Optional[str]
+    price: Optional[int]
+
+
+
+
+
+class OrderCreateModel(BaseModel):
+    id: Optional[int]
+    quantity: Optional[int]
+    user_id: Optional[str]
+    product_id: Optional[str]
+
+
+
+
+
+
+
+
+
+
+
+
+class CargoModel(BaseModel):
+    id: Optional[int]
+    shipping_address: Optional[str]
+    tracking_number: Optional[str]
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            'id': 1,
+            'shipping_address': None,
+            'tracking_number': None,
+        }
