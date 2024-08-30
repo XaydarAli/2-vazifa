@@ -1,5 +1,11 @@
+from http.client import HTTPException
+
 from fastapi import APIRouter
-from schemas import RegisterModel,LoginModel
+from fastapi.encoders import jsonable_encoder
+from sqlalchemy.sql.functions import user
+from starlette import status
+
+from schemas import RegisterModel,LoginModel,UserUpdateModel
 from database import Session,ENGINE
 from models import User
 from werkzeug.security import generate_password_hash,check_password_hash
@@ -56,4 +62,75 @@ async def create_user(user:RegisterModel):
 @auth_router.get("/users")
 async def get_users():
     users=session.query(User).all()
-    return users
+    data=[
+        {   'id':user.id,
+            'username':user.username,
+            'email':user.email,
+            'password':user.password,
+        }
+        for user in users
+    ]
+    return jsonable_encoder(data)
+
+
+
+
+
+
+@auth_router.get('/{id}')
+async def user_detail(id: int):
+    user = session.query(User).filter(User.id == id).first()
+    if user is not None:
+        context = {
+            "id": user.id,
+            "username": user.username,
+            "last_name": user.last_name,
+            "first_name": user.first_name,
+            "password":user.password,
+        }
+        return jsonable_encoder(context)
+
+    return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Bunday user yo'q")
+
+
+
+
+@auth_router.put('/{id}')
+async def update_user(id: int, data: UserUpdateModel):
+    user = session.query(User).filter(User.id == id).first()
+    if user:
+        for key, value in data.dict(exclude_unset=True).items():
+            setattr(user, key, value)
+        session.commit()
+        data = {
+            "code": 200,
+            "message": "Userga o'zgaritirish kiritildi"
+        }
+        return jsonable_encoder(data)
+
+    return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="bunday order qilinmagan")
+
+
+
+
+
+
+
+
+@auth_router.delete('/{id}', status_code=status.HTTP_200_OK)
+async def delete(id: int):
+    user = session.query(User).filter(User.id == id).first()
+    if User:
+        session.delete(user)
+        session.commit()
+        data = {
+            "code": 200,
+            "message": f"{id} id lik user is deleted",
+        }
+        return jsonable_encoder(data)
+
+    else:
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bunday user mavjud emas")
+
+
+

@@ -28,6 +28,34 @@ class LoginModel(BaseModel):
 
 
 
+
+class UserListModel(BaseModel):
+    id: Optional[int]
+    username:Optional[str]
+    first_name:Optional[str]
+    last_name:Optional[str]
+    password:Optional[str]
+
+
+
+
+# class UserCreateModel(BaseModel):
+#     id: Optional[int]
+#     username:Optional[str]
+#     first_name:Optional[str]
+#     last_name:Optional[str]
+#     password:Optional[str]
+#
+
+class UserUpdateModel(BaseModel):
+    id: Optional[int]
+    username: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    password: Optional[str]
+
+
+
 class ProductModel(BaseModel):
     id: Optional[int]
     name: Optional[str]
@@ -65,14 +93,33 @@ class ProductListModel(BaseModel):
     price: Optional[int]
 
 
+class ProductUpdateModel(BaseModel):
+    id: Optional[int]
+    name: Optional[str]
+    price: Optional[int]
 
+
+class OrderListModel(BaseModel):
+    id: Optional[int]
+    quantity: Optional[int]
+    user_id: Optional[str]
+    product_id: Optional[int]
+    cargo_id: Optional[int]
+
+
+class OrderUpdateModel(BaseModel):
+    id: Optional[int]
+    quantity: Optional[int]
+    user_id: Optional[str]
+    product_id: Optional[int]
+    cargo_id: Optional[int]
 
 
 class OrderCreateModel(BaseModel):
     id: Optional[int]
     quantity: Optional[int]
-    user_id: Optional[str]
-    product_id: Optional[str]
+    user_id: Optional[int]
+    product_id: Optional[int]
 
 
 
